@@ -1,0 +1,9 @@
+django
+djangorestframework
+django-filter
+django-cors-headers
+psycopg[binary]
+pytest
+pytest-django
+pytest-cov
+ruff

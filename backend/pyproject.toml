@@ -1,0 +1,28 @@
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.test_settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+testpaths = ["tracker"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = [
+    "*/migrations/*.py",
+]
+
+[tool.ruff.lint]
+select = [
+    "B",
+    "DJ",
+    "E",
+    "F",
+    "I",
+    "UP",
+]
+ignore = [
+    "DJ001",
+    "DJ012",
+]
+
+[tool.ruff.format]
+quote-style = "single"
