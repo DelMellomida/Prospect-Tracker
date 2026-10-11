@@ -28,6 +28,11 @@ class RecordListSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
+        read_only_fields = [
+            'record_id',
+            'created_at',
+            'updated_at',
+        ]
 
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,6 +43,12 @@ class NoteSerializer(serializers.ModelSerializer):
             'content',
             'created_at',
             'updated_at',
+        ]
+        read_only_fields = [
+            'note_id', 
+            'record_id',
+            'created_at', 
+            'updated_at'
         ]
 
 class FollowUpSerializer(serializers.ModelSerializer):
@@ -71,4 +82,9 @@ class RecordDetailSerializer(serializers.ModelSerializer):
             'updated_at',
             'notes',
             'follow_up',
+        ]
+        read_only_fields = [
+            'record_id',
+            'created_at',
+            'updated_at',
         ]

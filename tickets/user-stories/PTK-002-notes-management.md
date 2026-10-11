@@ -24,15 +24,15 @@ From Design Doc 2 (FR-2.1 to FR-2.3): notes are child objects of records, auto-t
 ---
 
 ## Acceptance Criteria
-- [ ] **AC1:**
+- [/] **AC1:**
   - **Given** a record exists
   - **When** user posts a note
   - **Then** note is saved with content, created_at, updated_at
-- [ ] **AC2:**
+- [/] **AC2:**
   - **Given** a note exists
   - **When** user edits content
   - **Then** updated_at updates and new content is shown
-- [ ] **AC3:**
+- [/] **AC3:**
   - **Given** a note exists
   - **When** user deletes it
   - **Then** note is removed, no orphan remains
