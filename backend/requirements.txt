@@ -3,3 +3,4 @@ djangorestframework
 django-filter
 django-cors-headers
 psycopg[binary]
+python-dotenv

@@ -154,6 +154,8 @@ CACHE = {
 }
 
 REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'tracker.pagination.RecordPagination',
+    'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': [
     ],
     'DEFAULT_PERMISSION_CLASSES': [

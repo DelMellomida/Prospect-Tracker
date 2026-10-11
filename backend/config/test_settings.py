@@ -1,6 +1,11 @@
 import os
 
-from .settings import *  # noqa: F403
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '..', '.env'))
+
+
+from .settings import *  # noqa: E402,F403
 
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'test-secret-key')
 
