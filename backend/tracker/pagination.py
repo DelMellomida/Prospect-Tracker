@@ -19,4 +19,4 @@ class RecordPagination(PageNumberPagination):
         try:
             return super().paginate_queryset(queryset, request, view)
         except NotFound as exc:
-            raise ValidationError(str(exc))
+            raise ValidationError(str(exc)) from exc

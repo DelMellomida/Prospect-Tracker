@@ -8,7 +8,10 @@ from .models import Record
 class RecordFilter(django_filters.FilterSet):
     q = django_filters.CharFilter(method='filter_q', label='Search')
     sort_by = django_filters.CharFilter(method='filter_sort_by', label='Sort By')
-    follow_up_due = django_filters.BooleanFilter(method='filter_follow_up_due', label='Follow Up Due')
+    follow_up_due = django_filters.BooleanFilter(
+        method='filter_follow_up_due',
+        label='Follow Up Due',
+    )
 
     class Meta:
         model = Record

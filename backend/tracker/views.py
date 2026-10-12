@@ -2,6 +2,7 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from .filters import RecordFilter
 from .models import Note, Record
 from .serializers import (
     NoteSerializer,
@@ -17,7 +18,6 @@ from .services import (
     update_note,
     update_record,
 )
-from .filters import RecordFilter
 
 
 class EmptyListViewSet(viewsets.ViewSet):

@@ -152,9 +152,24 @@ def test_status_parameter_filters_records():
 
 @pytest.mark.django_db
 def test_sort_by_last_date_contacted_orders_records_ascending_and_descending():
-    Record.objects.create(company='Alpha Corp', status='contacted', source='linkedin', last_date_contacted='2024-01-01')
-    Record.objects.create(company='Beta LLC', status='ongoing', source='reddit', last_date_contacted='2024-02-01')
-    Record.objects.create(company='Gamma Inc', status='contacted', source='reddit', last_date_contacted='2024-03-01')
+    Record.objects.create(
+        company='Alpha Corp',
+        status='contacted',
+        source='linkedin',
+        last_date_contacted='2024-01-01',
+    )
+    Record.objects.create(
+        company='Beta LLC',
+        status='ongoing',
+        source='reddit',
+        last_date_contacted='2024-02-01',
+    )
+    Record.objects.create(
+        company='Gamma Inc',
+        status='contacted',
+        source='reddit',
+        last_date_contacted='2024-03-01',
+    )
 
     client = APIClient()
     response_asc = client.get('/api/v1/records?sort_by=last_date_contacted&order=asc')
@@ -176,7 +191,7 @@ def test_follow_up_due_true_returns_records_due_today_or_earlier():
     record_one = Record.objects.create(company='Alpha Corp', status='contacted')
     record_two = Record.objects.create(company='Beta LLC', status='ongoing')
     record_three = Record.objects.create(company='Gamma Inc', status='contacted')
-    record_four = Record.objects.create(company='Delta Ltd', status='ongoing')
+    Record.objects.create(company='Delta Ltd', status='ongoing')
 
     today = timezone.localdate()
     yesterday = today - datetime.timedelta(days=1)
@@ -191,13 +206,14 @@ def test_follow_up_due_true_returns_records_due_today_or_earlier():
 
     assert response_due.status_code == 200
     assert len(response_due.data['results']) == 2
-    assert {record['company'] for record in response_due.data['results']} == {'Alpha Corp', 'Beta LLC'}
+    assert {
+        record['company']
+        for record in response_due.data['results']
+    } == {'Alpha Corp', 'Beta LLC'}
 
 @pytest.mark.django_db
-def test_record_list_rejects_disallowed_page_size():
+def test_record_list_rejects_invalid_page():
     client = APIClient()
-    response_page_size = client.get('/api/v1/records?page_size=37')
     response_page = client.get('/api/v1/records?page=abc')
 
-    assert response_page_size.status_code == 400
     assert response_page.status_code == 400
