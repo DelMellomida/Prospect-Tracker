@@ -2,6 +2,7 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from .filters import RecordFilter
 from .models import Note, Record
 from .serializers import (
     NoteSerializer,
@@ -27,6 +28,7 @@ class EmptyListViewSet(viewsets.ViewSet):
 class RecordViewSet(viewsets.ModelViewSet):
     queryset = Record.objects.all().order_by('record_id')
     serializer_class = RecordWriteSerializer
+    filterset_class = RecordFilter
     
     def get_serializer_class(self):
         if self.action == 'list':

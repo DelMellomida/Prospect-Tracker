@@ -36,7 +36,7 @@ From Design Doc 2 (FR-2.1 to FR-2.3): notes are child objects of records, auto-t
   - **Given** a note exists
   - **When** user deletes it
   - **Then** note is removed, no orphan remains
-- [ ] **AC4:** Notes are included in record detail response
+- [/] **AC4:** Notes are included in record detail response
 
 ---
 
