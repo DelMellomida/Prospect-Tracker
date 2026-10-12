@@ -1,4 +1,4 @@
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.pagination import PageNumberPagination
 
 
@@ -14,3 +14,9 @@ class RecordPagination(PageNumberPagination):
                 f'Invalid page size. Allowed values are: {self.allowed_page_sizes}'
             )
         return page_size
+
+    def paginate_queryset(self, queryset, request, view=None):
+        try:
+            return super().paginate_queryset(queryset, request, view)
+        except NotFound as exc:
+            raise ValidationError(str(exc))

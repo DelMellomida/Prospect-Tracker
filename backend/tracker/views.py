@@ -17,6 +17,7 @@ from .services import (
     update_note,
     update_record,
 )
+from .filters import RecordFilter
 
 
 class EmptyListViewSet(viewsets.ViewSet):
@@ -27,6 +28,7 @@ class EmptyListViewSet(viewsets.ViewSet):
 class RecordViewSet(viewsets.ModelViewSet):
     queryset = Record.objects.all().order_by('record_id')
     serializer_class = RecordWriteSerializer
+    filterset_class = RecordFilter
     
     def get_serializer_class(self):
         if self.action == 'list':
