@@ -1,7 +1,7 @@
 ---
 id: PTK-001
 title: "Create, edit, delete, and view application records"
-status: in-progress
+status: completed
 type: story
 labels: [records, crud, backend, frontend]
 priority: p0
@@ -32,15 +32,15 @@ From Design Doc 2 (FR-1.1 to FR-1.5): the core CRUD for records including compan
   - **Given** an existing record
   - **When** the user edits it
   - **Then** the updated fields persist and are visible
-- [ ] **AC3:**
+- [/] **AC3:**
   - **Given** an existing record with notes
   - **When** the user deletes the record
   - **Then** notes and follow-up cascade-delete; audit logs remain
-- [ ] **AC4:**
+- [/] **AC4:**
   - **Given** a record exists
   - **When** the user views it
   - **Then** all fields including notes and follow-up are shown
-- [ ] **AC5:**
+- [/] **AC5:**
   - **Given** multiple records
   - **When** the user navigates
   - **Then** paginated list is returned (sizes: 10, 20, 50, 100)

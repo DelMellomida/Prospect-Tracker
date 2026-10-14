@@ -1,7 +1,7 @@
 ---
 id: PTK-004
 title: "Set and view follow-up reminder per record"
-status: backlog
+status: completed
 type: story
 labels: [follow-up, reminder, backend, frontend]
 priority: p1
@@ -24,11 +24,11 @@ From Design Doc 2 (FR-4.1): one follow-up per record with a date and content. PA
 ---
 
 ## Acceptance Criteria
-- [ ] **AC1:** PATCH with `follow_up` object creates a new follow-up row
-- [ ] **AC2:** PATCH with `follow_up` updates existing row partially
-- [ ] **AC3:** PATCH with `follow_up: null` deletes the follow-up row
-- [ ] **AC4:** List response includes `follow_up_date` and `follow_up_due` flag
-- [ ] **AC5:** Record delete cascades to follow-up; audit remains
+- [/] **AC1:** PATCH with `follow_up` object creates a new follow-up row
+- [/] **AC2:** PATCH with `follow_up` updates existing row partially
+- [/] **AC3:** PATCH with `follow_up: null` deletes the follow-up row
+- [/] **AC4:** List response includes `follow_up_date` and `follow_up_due` flag
+- [/] **AC5:** Record delete cascades to follow-up; audit remains
 
 ---
 

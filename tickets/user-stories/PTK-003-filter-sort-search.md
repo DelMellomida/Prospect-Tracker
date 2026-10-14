@@ -1,7 +1,7 @@
 ---
 id: PTK-003
 title: "Filter, sort, and search application records"
-status: backlog
+status: completed
 type: story
 labels: [search, filter, sort, backend, frontend]
 priority: p0
@@ -24,11 +24,11 @@ From Design Doc 2 (FR-3.1, FR-3.2, FR-3.3): list endpoint supports status filter
 ---
 
 ## Acceptance Criteria
-- [ ] **AC1:** Filter by status returns only records with that status
-- [ ] **AC2:** Sort by last_date_contacted asc/desc orders correctly
-- [ ] **AC3:** Search `q` returns partial case-insensitive matches on company or source
-- [ ] **AC4:** `follow_up_due=true` returns only records due today or earlier
-- [ ] **AC5:** Invalid `page_size` or `page` returns 400
+- [/] **AC1:** Filter by status returns only records with that status
+- [/] **AC2:** Sort by last_date_contacted asc/desc orders correctly
+- [/] **AC3:** Search `q` returns partial case-insensitive matches on company or source
+- [/] **AC4:** `follow_up_due=true` returns only records due today or earlier
+- [/] **AC5:** Invalid `page_size` or `page` returns 400
 
 ---
 
