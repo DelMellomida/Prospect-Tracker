@@ -282,7 +282,8 @@ def test_record_import_round_trips_formula_escaped_values_from_export():
 def test_record_import_preserves_user_text_starting_with_single_quote():
     uploaded_file = SimpleUploadedFile(
         'records.csv',
-        b"Company,Status,Contact No,Technical Audit\n'=2+2,contacted,'+639123456789,'@SUM(1,1)\n",
+        b"Company,Status,Contact No,Technical Audit\n"
+        b"'=2+2,contacted,'+639123456789,\"'@SUM(1,1)\"\n",
         content_type='text/csv',
     )
 
