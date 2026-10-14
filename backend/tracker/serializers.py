@@ -1,38 +1,8 @@
+from django.utils import timezone
 from rest_framework import serializers
 
 from .models import FollowUp, Note, Record
 
-
-class RecordWriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Record
-        fields = [
-            'company',
-            'status',
-            'company_contact_no',
-            'company_email',
-            'last_date_contacted',
-            'technical_audit',
-            'source',
-        ]
-
-class RecordListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Record
-        fields = [
-            'record_id',
-            'company',
-            'status',
-            'company_contact_no',
-            'company_email',
-            'created_at',
-            'updated_at',
-        ]
-        read_only_fields = [
-            'record_id',
-            'created_at',
-            'updated_at',
-        ]
 
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,6 +32,52 @@ class FollowUpSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
+
+class RecordWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Record
+        fields = [
+            'company',
+            'status',
+            'company_contact_no',
+            'company_email',
+            'last_date_contacted',
+            'technical_audit',
+            'source',
+        ]
+
+class RecordListSerializer(serializers.ModelSerializer):
+    follow_up_date = serializers.DateField(
+        source='follow_up.follow_up_date',
+        read_only=True,
+        allow_null=True,
+    )
+    follow_up_due = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Record
+        fields = [
+            'record_id',
+            'company',
+            'status',
+            'company_contact_no',
+            'company_email',
+            'created_at',
+            'updated_at',
+            'follow_up_date',
+            'follow_up_due',
+        ]
+        read_only_fields = [
+            'record_id',
+            'created_at',
+            'updated_at',
+        ]
+
+    def get_follow_up_due(self, record):
+        follow_up = getattr(record, 'follow_up', None)
+        if follow_up and follow_up.follow_up_date:
+            return follow_up.follow_up_date <= timezone.localdate()
+        return False
 
 class RecordDetailSerializer(serializers.ModelSerializer):
     notes = NoteSerializer(many=True, read_only=True)

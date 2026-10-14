@@ -1,4 +1,6 @@
-from .models import AuditLog
+from django.db import transaction
+
+from .models import AuditLog, FollowUp
 from .serializers import NoteSerializer, RecordWriteSerializer
 
 
@@ -18,11 +20,24 @@ def create_record(data):
         return record, None
     return None, serializer.errors
 
+@transaction.atomic
 def update_record(record, data):
+    missing = object()
+    follow_up_data = data.pop('follow_up', missing)
+
     serializer = RecordWriteSerializer(record, data=data, partial=True)
     old_value = RecordWriteSerializer(record).data
+
     if serializer.is_valid():
         record = serializer.save()
+        if follow_up_data is None:
+            FollowUp.objects.filter(record_id=record).delete()
+        elif follow_up_data is not missing:
+            FollowUp.objects.update_or_create(
+                record_id=record,
+                defaults=follow_up_data,
+            )
+
         AuditLog.objects.create(
             entity_type='record',
             entity_id=record.record_id,
