@@ -1,7 +1,7 @@
 ---
 id: PTK-001
 title: "Create, edit, delete, and view application records"
-status: in-progress
+status: completed
 type: story
 labels: [records, crud, backend, frontend]
 priority: p0

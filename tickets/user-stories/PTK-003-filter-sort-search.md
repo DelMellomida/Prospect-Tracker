@@ -1,7 +1,7 @@
 ---
 id: PTK-003
 title: "Filter, sort, and search application records"
-status: backlog
+status: completed
 type: story
 labels: [search, filter, sort, backend, frontend]
 priority: p0

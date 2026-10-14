@@ -1,7 +1,7 @@
 ---
 id: PTK-005
 title: "Export records to CSV and import from CSV"
-status: backlog
+status: in-progress
 type: story
 labels: [csv, export, import, backend]
 priority: p2

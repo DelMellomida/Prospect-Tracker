@@ -1,7 +1,7 @@
 ---
 id: PTK-002
 title: "Add, edit, and delete notes on application records"
-status: backlog
+status: completed
 type: story
 labels: [notes, crud, backend, frontend]
 priority: p0
