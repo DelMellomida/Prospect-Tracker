@@ -1,7 +1,13 @@
+import csv
+from io import StringIO
+
+from django.core.cache import cache
+from django.db import transaction
+from django.http import HttpResponse
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
 
 from .filters import RecordFilter
 from .models import Note, Record
@@ -20,12 +26,6 @@ from .services import (
     update_record,
 )
 
-import csv
-from io import StringIO
-
-from django.core.cache import cache
-from django.db import transaction
-from django.http import HttpResponse
 
 class EmptyListViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -129,7 +129,7 @@ class RecordViewSet(viewsets.ModelViewSet):
                 raise ValidationError({'error': 'CSV must include company and status columns.'})
             if len(fields) != len(set(fields)) or any(
                 field not in column_fields.values() and header not in generated_columns
-                for header, field in zip(headers, fields)
+                for header, field in zip(headers, fields, strict=True)
             ):
                 raise ValidationError({'error': 'CSV contains duplicate or unknown columns.'})
 
@@ -137,7 +137,9 @@ class RecordViewSet(viewsets.ModelViewSet):
                 count = 0
                 for row_number, row in enumerate(reader, start=2):
                     if None in row or any(value is None for value in row.values()):
-                        raise ValidationError({'row': row_number, 'error': 'Column count mismatch.'})
+                        raise ValidationError({
+                            'row': row_number, 'error': 'Column count mismatch.',
+                        })
                     data = {
                         column_fields.get(header, header): value
                         for header, value in row.items() if header not in generated_columns
