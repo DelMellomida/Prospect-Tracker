@@ -1,7 +1,7 @@
 ---
 id: PTK-005
 title: "Export records to CSV and import from CSV"
-status: in-progress
+status: completed
 type: story
 labels: [csv, export, import, backend]
 priority: p2
@@ -24,10 +24,10 @@ From Design Doc 2 (FR-5.1, FR-5.2): export at `/api/v1/records/export` (GET, CSV
 ---
 
 ## Acceptance Criteria
-- [ ] **AC1:** GET `/records/export` downloads CSV with all records
-- [ ] **AC2:** POST `/records/import` uploads a valid CSV and creates records
-- [ ] **AC3:** Import writes audit entries per created record
-- [ ] **AC4:** Import clears cache after commit
+- [/] **AC1:** GET `/records/export` downloads CSV with all records
+- [/] **AC2:** POST `/records/import` uploads a valid CSV and creates records
+- [/] **AC3:** Import writes audit entries per created record
+- [/] **AC4:** Import clears cache after commit
 
 ---
 

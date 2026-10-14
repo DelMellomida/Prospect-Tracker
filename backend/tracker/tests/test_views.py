@@ -171,7 +171,7 @@ def test_record_import_requires_the_file_field_name():
     assert not Record.objects.exists()
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_record_import_creates_a_record_and_audit_entry():
     uploaded_file = SimpleUploadedFile(
         'records.csv', b'Company,Status\nExample,contacted\n', content_type='text/csv',
@@ -240,7 +240,7 @@ def test_record_import_invalid_row_rolls_back_records_and_audits_without_clearin
     clear.assert_not_called()
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_record_import_accepts_exported_csv_with_generated_fields_and_empty_values():
     original = Record.objects.create(company='Exported company', status='contacted')
     client = APIClient()

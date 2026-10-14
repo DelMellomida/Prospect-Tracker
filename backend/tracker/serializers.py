@@ -1,7 +1,7 @@
 from django.utils import timezone
 from rest_framework import serializers
 
-from .models import FollowUp, Note, Record
+from .models import AuditLog, FollowUp, Note, Record
 
 
 class NoteSerializer(serializers.ModelSerializer):
@@ -104,3 +104,13 @@ class RecordDetailSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
+
+
+class AuditLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuditLog
+        fields = [
+            'log_id', 'entity_type', 'entity_id', 'action', 'initiator',
+            'old_value', 'new_value', 'created_at',
+        ]
+        read_only_fields = fields

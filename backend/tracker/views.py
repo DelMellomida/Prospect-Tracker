@@ -9,9 +9,10 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
-from .filters import RecordFilter
-from .models import Note, Record
+from .filters import AuditLogFilter, RecordFilter
+from .models import AuditLog, Note, Record
 from .serializers import (
+    AuditLogSerializer,
     NoteSerializer,
     RecordDetailSerializer,
     RecordListSerializer,
@@ -74,10 +75,14 @@ class RecordViewSet(viewsets.ModelViewSet):
             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 
     def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
         data = request.data.copy()
         record = self.get_object()
         data['initiator'] = request.user.username if request.user.is_authenticated else 'anonymous'
-        record, errors = update_record(record, data)
+        record, errors = update_record(record, data, partial=kwargs.get('partial', False))
         if record:
             serializer = self.get_serializer(record)
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -195,14 +200,19 @@ class RecordViewSet(viewsets.ModelViewSet):
 
 
 class NoteViewSet(viewsets.ModelViewSet):
+    http_method_names = ['get', 'put', 'patch', 'delete', 'head', 'options']
     queryset = Note.objects.all().order_by('updated_at')
     serializer_class = NoteSerializer
 
     def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
         note = self.get_object()
         data = request.data.copy()
         data['initiator'] = request.user.username if request.user.is_authenticated else 'anonymous'
-        note, errors = update_note(note, data)
+        note, errors = update_note(note, data, partial=kwargs.get('partial', False))
         if note:
             serializer = NoteSerializer(note)
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -219,5 +229,7 @@ class NoteViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class LogViewSet(EmptyListViewSet):
-    pass
+class LogViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = AuditLog.objects.all().order_by('-created_at', '-log_id')
+    serializer_class = AuditLogSerializer
+    filterset_class = AuditLogFilter
