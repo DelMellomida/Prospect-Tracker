@@ -2,7 +2,7 @@ import django_filters
 from django.db.models import Q
 from django.utils import timezone
 
-from .models import Record
+from .models import AuditLog, Record
 
 
 class RecordFilter(django_filters.FilterSet):
@@ -38,3 +38,12 @@ class RecordFilter(django_filters.FilterSet):
             today = timezone.localdate()
             return queryset.filter(follow_up__follow_up_date__lte=today)
         return queryset
+
+
+class AuditLogFilter(django_filters.FilterSet):
+    created_after = django_filters.IsoDateTimeFilter(field_name='created_at', lookup_expr='gte')
+    created_before = django_filters.IsoDateTimeFilter(field_name='created_at', lookup_expr='lte')
+
+    class Meta:
+        model = AuditLog
+        fields = ['entity_type', 'entity_id', 'action', 'created_after', 'created_before']

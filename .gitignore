@@ -5,7 +5,7 @@
 **/dist
 
 *.claude
-*.codex
+# *.codex
 
 __pycache__/
 .pytest_cache/

@@ -5,7 +5,7 @@ from tracker.models import AuditLog, FollowUp, Note, Record
 from tracker.services import create_record, delete_record, update_record
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_create_record_creates_record_and_audit_log():
     data = {
         'company': 'Test Company',
@@ -22,7 +22,7 @@ def test_create_record_creates_record_and_audit_log():
     assert record is not None
     assert AuditLog.objects.filter(entity_id=record.record_id).exists()
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_update_record_updates_record_and_audit_log():
     record = Record.objects.create(
         company='Old Company',
@@ -42,7 +42,7 @@ def test_update_record_updates_record_and_audit_log():
         action='update'
     ).exists()
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_delete_record_deletes_record_and_creates_audit_log():
     record = Record.objects.create(
         company='Delete Company',
@@ -71,7 +71,7 @@ def test_delete_record_deletes_record_and_creates_audit_log():
     ).exists()
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_update_record_creates_follow_up_when_follow_up_payload_is_provided():
     record = Record.objects.create(
         company='Follow Up Company',
@@ -98,7 +98,7 @@ def test_update_record_creates_follow_up_when_follow_up_payload_is_provided():
         action='update'
     ).exists()
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_update_record_updates_existing_follow_up_partially_when_follow_up_payload_is_provided():
     record = Record.objects.create(
         company='Follow Up Company',
@@ -127,7 +127,7 @@ def test_update_record_updates_existing_follow_up_partially_when_follow_up_paylo
         action='update'
     ).exists()
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_update_record_deletes_existing_follow_up_when_follow_up_is_null():
     record = Record.objects.create(
         company='Follow Up Company',
@@ -154,7 +154,7 @@ def test_update_record_deletes_existing_follow_up_when_follow_up_is_null():
         follow_up_id=follow_up.follow_up_id
     ).exists()
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_update_record_rolls_back_record_when_follow_up_update_fails():
     record = Record.objects.create(
         company='Follow Up Company',
