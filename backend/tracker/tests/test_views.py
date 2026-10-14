@@ -217,3 +217,18 @@ def test_record_list_rejects_invalid_page():
     response_page = client.get('/api/v1/records?page=abc')
 
     assert response_page.status_code == 400
+
+@pytest.mark.django_db
+def test_record_list_includes_follow_up_date_and_due_flag():
+    record = Record.objects.create(company='Alpha Corp', status='contacted')
+    today = timezone.localdate()
+    FollowUp.objects.create(record_id=record, follow_up_date=today)
+
+    client = APIClient()
+    response = client.get('/api/v1/records')
+
+    assert response.status_code == 200
+    assert len(response.data['results']) == 1
+    assert response.data['results'][0]['company'] == 'Alpha Corp'
+    assert response.data['results'][0]['follow_up_date'] == str(today)
+    assert response.data['results'][0]['follow_up_due'] is True
