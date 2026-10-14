@@ -26,6 +26,25 @@ from .services import (
     update_record,
 )
 
+FORMULA_PREFIXES = ('=', '+', '-', '@')
+
+
+def _escape_formula_text(value):
+    if isinstance(value, str) and value.startswith(FORMULA_PREFIXES):
+        return f"'{value}"
+    return value
+
+
+def _unescape_formula_text(value):
+    if (
+        isinstance(value, str)
+        and len(value) > 1
+        and value[0] == "'"
+        and value[1] in FORMULA_PREFIXES
+    ):
+        return value[1:]
+    return value
+
 
 class EmptyListViewSet(viewsets.ViewSet):
     def list(self, request):
@@ -87,12 +106,12 @@ class RecordViewSet(viewsets.ModelViewSet):
         for record in self.get_queryset():
             writer.writerow([
                 record.record_id,
-                record.company,
+                _escape_formula_text(record.company),
                 record.status,
-                record.company_contact_no,
+                _escape_formula_text(record.company_contact_no),
                 record.company_email,
                 record.last_date_contacted,
-                record.technical_audit,
+                _escape_formula_text(record.technical_audit),
                 record.source,
                 record.created_at,
                 record.updated_at
@@ -124,6 +143,7 @@ class RecordViewSet(viewsets.ModelViewSet):
                 StringIO(uploaded_file.read().decode('utf-8-sig')), strict=True,
             )
             headers = reader.fieldnames or []
+            is_exported_file = {'Record ID', 'Created At', 'Updated At'}.issubset(headers)
             fields = [column_fields.get(header, header) for header in headers]
             if not {'company', 'status'}.issubset(fields):
                 raise ValidationError({'error': 'CSV must include company and status columns.'})
@@ -141,7 +161,9 @@ class RecordViewSet(viewsets.ModelViewSet):
                             'row': row_number, 'error': 'Column count mismatch.',
                         })
                     data = {
-                        column_fields.get(header, header): value
+                        column_fields.get(header, header): (
+                            _unescape_formula_text(value) if is_exported_file else value
+                        )
                         for header, value in row.items() if header not in generated_columns
                     }
                     for field in ('last_date_contacted', 'source'):

@@ -101,6 +101,24 @@ def test_record_export_preserves_all_fields_and_csv_special_characters():
 
 
 @pytest.mark.django_db
+def test_record_export_neutralizes_formula_leading_text():
+    Record.objects.create(
+        company='=2+2',
+        status='contacted',
+        company_contact_no='+639123456789',
+        technical_audit='@SUM(1,1)',
+    )
+
+    response = APIClient().get('/api/v1/records/export')
+
+    assert response.status_code == 200
+    rows = list(csv.DictReader(StringIO(response.content.decode('utf-8'))))
+    assert rows[0]['Company'] == "'=2+2"
+    assert rows[0]['Contact No'] == "'+639123456789"
+    assert rows[0]['Technical Audit'] == "'@SUM(1,1)"
+
+
+@pytest.mark.django_db
 def test_record_export_returns_headers_when_no_records_exist():
     response = APIClient().get('/api/v1/records/export')
 
@@ -237,6 +255,46 @@ def test_record_import_accepts_exported_csv_with_generated_fields_and_empty_valu
     assert imported.last_date_contacted is None
     assert imported.source is None
     assert AuditLog.objects.filter(entity_id=imported.pk, action='create').exists()
+
+
+@pytest.mark.django_db
+def test_record_import_round_trips_formula_escaped_values_from_export():
+    original = Record.objects.create(
+        company='=2+2',
+        status='contacted',
+        company_contact_no='+639123456789',
+        technical_audit='@SUM(1,1)',
+    )
+    client = APIClient()
+    exported = client.get('/api/v1/records/export')
+    uploaded_file = SimpleUploadedFile('records.csv', exported.content, content_type='text/csv')
+
+    response = client.post('/api/v1/records/import', {'file': uploaded_file}, format='multipart')
+
+    assert response.status_code == 201
+    imported = Record.objects.exclude(pk=original.pk).get()
+    assert imported.company == original.company
+    assert imported.company_contact_no == original.company_contact_no
+    assert imported.technical_audit == original.technical_audit
+
+
+@pytest.mark.django_db
+def test_record_import_preserves_user_text_starting_with_single_quote():
+    uploaded_file = SimpleUploadedFile(
+        'records.csv',
+        b"Company,Status,Contact No,Technical Audit\n'=2+2,contacted,'+639123456789,'@SUM(1,1)\n",
+        content_type='text/csv',
+    )
+
+    response = APIClient().post(
+        '/api/v1/records/import', {'file': uploaded_file}, format='multipart',
+    )
+
+    assert response.status_code == 201
+    imported = Record.objects.get()
+    assert imported.company == "'=2+2"
+    assert imported.company_contact_no == "'+639123456789"
+    assert imported.technical_audit == "'@SUM(1,1)"
 
 
 @pytest.mark.django_db
