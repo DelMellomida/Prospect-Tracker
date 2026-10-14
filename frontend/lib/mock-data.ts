@@ -1,0 +1,18 @@
+import type { Activity, Prospect } from "./types";
+// A fixed reference date keeps the sample workspace consistent as you learn.
+export const DEMO_TODAY = "2026-10-15";
+export const initialProspects: Prospect[] = [
+    { record_id: "1", company: "Layers Studio", status: "ongoing", company_email: "hello@layers.example", company_contact_no: "+63 917 555 0101", source: "linkedin", last_date_contacted: "2026-10-14", created_at: "2026-10-01", technical_audit: "Portfolio images could use compression. Discuss a faster, more accessible website and a simpler project inquiry flow.", follow_up: { date: "2026-10-15", content: "Check in on the website proposal." }, notes: [{ id: "n1", content: "Sent an initial proposal. The team is interested in a website refresh before their next launch.", created_at: "2026-10-14T08:30:00Z" }] },
+    { record_id: "2", company: "Northstar Coffee", status: "contacted", company_email: "team@northstar.example", company_contact_no: "", source: "facebook", last_date_contacted: "2026-10-12", created_at: "2026-10-03", technical_audit: "Mobile menu is difficult to navigate. An updated menu page and store locator would help.", follow_up: { date: "2026-10-14", content: "Follow up on the introductory message." }, notes: [] },
+    { record_id: "3", company: "Orbit Digital", status: "ongoing", company_email: "work@orbit.example", company_contact_no: "", source: "discord", last_date_contacted: "2026-10-13", created_at: "2026-10-04", technical_audit: "Exploring a lightweight client portal with project updates.", follow_up: { date: "2026-10-16", content: "Send a project scope and timeline." }, notes: [] },
+    { record_id: "4", company: "Forma Architecture", status: "completion", company_email: "studio@forma.example", company_contact_no: "", source: "linkedin", last_date_contacted: "2026-10-11", created_at: "2026-09-22", technical_audit: "Portfolio redesign completed and handed over.", follow_up: null, notes: [] },
+    { record_id: "5", company: "Bloom & Wild", status: "contacted", company_email: "hi@bloom.example", company_contact_no: "", source: "reddit", last_date_contacted: "2026-10-14", created_at: "2026-10-09", technical_audit: "Needs a responsive storefront for seasonal flower collections.", follow_up: { date: "2026-10-18", content: "Ask about their seasonal launch plans." }, notes: [] },
+    { record_id: "6", company: "Mono Supply", status: "ongoing", company_email: "hello@mono.example", company_contact_no: "", source: "others", last_date_contacted: "2026-10-10", created_at: "2026-10-02", technical_audit: "Product catalog needs clearer categories and better search.", follow_up: { date: "2026-10-15", content: "Review feedback on the catalog concept." }, notes: [] },
+    { record_id: "7", company: "Goodkind Co.", status: "dropped", company_email: "team@goodkind.example", company_contact_no: "", source: "facebook", last_date_contacted: "2026-10-07", created_at: "2026-09-25", technical_audit: "Project paused due to an internal budget change.", follow_up: null, notes: [] },
+    { record_id: "8", company: "Fieldwork Creative", status: "completion", company_email: "hello@fieldwork.example", company_contact_no: "", source: "linkedin", last_date_contacted: "2026-10-09", created_at: "2026-09-18", technical_audit: "Landing page delivered. All review feedback addressed.", follow_up: null, notes: [] },
+];
+export const initialActivity: Activity[] = [
+    { id: "a1", company: "Layers Studio", description: "Note added", created_at: "2026-10-14T08:30:00Z" },
+    { id: "a2", company: "Bloom & Wild", description: "Prospect contacted", created_at: "2026-10-14T03:00:00Z" },
+    { id: "a3", company: "Orbit Digital", description: "Moved to In progress", created_at: "2026-10-13T06:00:00Z" },
+];
