@@ -1,11 +1,24 @@
 from rest_framework import status, viewsets
-from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 
-from .models import Record
-from .serializers import RecordDetailSerializer, RecordListSerializer, RecordWriteSerializer
-from .services import create_record, delete_record, update_record
+from .filters import RecordFilter
+from .models import Note, Record
+from .serializers import (
+    NoteSerializer,
+    RecordDetailSerializer,
+    RecordListSerializer,
+    RecordWriteSerializer,
+)
+from .services import (
+    create_note,
+    create_record,
+    delete_note,
+    delete_record,
+    update_note,
+    update_record,
+)
 
 import csv
 from io import StringIO
@@ -22,6 +35,7 @@ class EmptyListViewSet(viewsets.ViewSet):
 class RecordViewSet(viewsets.ModelViewSet):
     queryset = Record.objects.all().order_by('record_id')
     serializer_class = RecordWriteSerializer
+    filterset_class = RecordFilter
     
     def get_serializer_class(self):
         if self.action == 'list':
@@ -143,9 +157,42 @@ class RecordViewSet(viewsets.ModelViewSet):
             raise ValidationError({'error': 'Upload a valid UTF-8 CSV file.'}) from None
         return Response({'created': count}, status=status.HTTP_201_CREATED)
 
+    @action(detail=True, methods=['post'], url_path='notes')
+    def create_note(self, request, *args, **kwargs):
+        record = self.get_object()
+        data = request.data.copy()
+        data['initiator'] = request.user.username if request.user.is_authenticated else 'anonymous'
+        note, errors = create_note(record, data)
+        if note:
+            serializer = NoteSerializer(note)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 
-class NoteViewSet(EmptyListViewSet):
-    pass
+
+class NoteViewSet(viewsets.ModelViewSet):
+    queryset = Note.objects.all().order_by('updated_at')
+    serializer_class = NoteSerializer
+
+    def partial_update(self, request, *args, **kwargs):
+        note = self.get_object()
+        data = request.data.copy()
+        data['initiator'] = request.user.username if request.user.is_authenticated else 'anonymous'
+        note, errors = update_note(note, data)
+        if note:
+            serializer = NoteSerializer(note)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, *args, **kwargs):
+        data = request.data.copy()
+        note = self.get_object()
+        data['initiator'] = request.user.username if request.user.is_authenticated else 'anonymous'
+        note_id, errors = delete_note(note, data)
+        if errors:
+            return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class LogViewSet(EmptyListViewSet):
